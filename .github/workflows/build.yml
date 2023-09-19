@@ -37,10 +37,11 @@ jobs:
     - name: Install Dependencies (Windows)
       run: |
         choco install cmake imagemagick
+        choco install mingw --force
         choco install cmake.install --installargs '"ADD_CMAKE_TO_PATH=System"'
         # Additional steps to install libpng and zlib if necessary
 
     - name: Build (Windows with MinGW)
       run: |
-        cmake -DImageMagick_Magick++_LIBRARY:PATH="C:\ProgramData\chocolatey\lib" .
-        make
+        cmake .
+        mingw32-make
