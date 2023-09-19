@@ -40,8 +40,16 @@ jobs:
 
     - name: Find ImageMagick Location (Windows)
       run: |
-        where magick
+        where magick > magick_path.txt
+        Get-Content magick_path.txt
       shell: pwsh
+
+    - name: Upload Magick Path
+      uses: actions/upload-artifact@v2
+      with:
+        name: magick-path
+        path: magick_path.txt
+
 
 
 
