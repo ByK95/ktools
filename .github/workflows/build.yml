@@ -40,8 +40,9 @@ jobs:
 
     - name: Find ImageMagick Location (Windows)
       run: |
-        choco list imagemagick --local-only
         where magick
+      shell: pwsh
+
 
 
     - name: Build (Windows with MinGW)
