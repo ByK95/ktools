@@ -21,7 +21,6 @@ jobs:
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake imagemagick build-essential libzip-dev
-        ./configure && make
 
     - name: Install Dependencies (Windows)
       if: matrix.os == 'windows-latest'
@@ -32,11 +31,9 @@ jobs:
     - name: Build (Linux and Mac)
       if: matrix.os != 'windows-latest'
       run: |
-        sudo make install
+        ./configure && make
 
     - name: Build (Windows with MinGW)
       if: matrix.os == 'windows-latest'
       run: |
-        # Navigate to the build directory (change this to your actual build directory)
-        cd build_directory
         make
