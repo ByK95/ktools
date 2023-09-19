@@ -57,7 +57,7 @@ endif()
 add_subdirectory(lib)
 
 
-FIND_PACKAGE(ImageMagick COMPONENTS Magick++ MagickWand MagickCore REQUIRED)
+FIND_PACKAGE(ImageMagick COMPONENTS Magick++ MagickWand REQUIRED)
 LIBFIND_PKG_CHECK_MODULES(Magick++_PKGCONF Magick++)
 if("${Magick++_PKGCONF_CFLAGS}" STREQUAL "")
 	if("${ImageMagick_LIBRARIES}" MATCHES "HDRI")

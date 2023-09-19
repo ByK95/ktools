@@ -36,9 +36,9 @@ jobs:
 
     - name: Install Dependencies (Windows)
       run: |
-        choco install imagemagick --version=6.8.8.1010 -y --force
+        choco install imagemagick cmake -y
 
     - name: Build (Windows with MinGW)
       run: |
         cmake -DCMAKE_BUILD_TYPE=Releas .
-        mingw32-make .
+        make
