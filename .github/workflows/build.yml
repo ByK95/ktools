@@ -44,11 +44,11 @@ jobs:
         Get-Content magick_path.txt
       shell: pwsh
 
-    - name: Upload Magick Path
-      uses: actions/upload-artifact@v2
-      with:
-        name: magick-path
-        path: magick_path.txt
+    # - name: Upload Magick Path
+    #   uses: actions/upload-artifact@v2
+    #   with:
+    #     name: magick-path
+    #     path: magick_path.txt
 
 
 
