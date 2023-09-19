@@ -7,33 +7,40 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-    runs-on: ${{ matrix.os }}
-    strategy:
-      matrix:
-        os: [ubuntu-latest, windows-latest]
+  build_linux:
+    runs-on: ubuntu-latest
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
 
-    - name: Install Dependencies (Linux and Mac)
-      if: matrix.os != 'windows-latest'
+    - name: Install Dependencies (Linux)
       run: |
         sudo apt-get update
         sudo apt-get install -y cmake imagemagick libmagick++-dev build-essential libzip-dev
 
+    - name: Build (Linux)
+      run: |
+        cmake -DBUNDLED_DEPENDENCIES=ON -DCMAKE_BUILD_TYPE=Release . && make
+
+    - name: Upload Binary (Linux)
+      uses: actions/upload-artifact@v1
+      with:
+        name: linux
+        path: .
+
+  build_windows:
+    runs-on: windows-latest
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
     - name: Install Dependencies (Windows)
-      if: matrix.os == 'windows-latest'
       run: |
         choco install cmake imagemagick
+        choco install cmake.install --installargs '"ADD_CMAKE_TO_PATH=System"'
         # Additional steps to install libpng and zlib if necessary
 
-    - name: Build (Linux and Mac)
-      if: matrix.os != 'windows-latest'
-      run: |
-        ./configure && make
-
     - name: Build (Windows with MinGW)
-      if: matrix.os == 'windows-latest'
       run: |
+        cmake -DImageMagick_Magick++_LIBRARY:PATH="C:\ProgramData\chocolatey\lib" .
         make
