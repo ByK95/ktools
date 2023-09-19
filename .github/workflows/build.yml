@@ -1,0 +1,42 @@
+name: Build and Generate Executables
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build:
+    runs-on: ${{ matrix.os }}
+    strategy:
+      matrix:
+        os: [ubuntu-latest, windows-latest, macos-latest]
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install Dependencies (Linux and Mac)
+      if: matrix.os != 'windows-latest'
+      run: |
+        sudo apt-get update
+        sudo apt-get install -y cmake imagemagick build-essential libzip-dev
+        ./configure && make
+
+    - name: Install Dependencies (Windows)
+      if: matrix.os == 'windows-latest'
+      run: |
+        choco install cmake imagemagick
+        # Additional steps to install libpng and zlib if necessary
+
+    - name: Build (Linux and Mac)
+      if: matrix.os != 'windows-latest'
+      run: |
+        sudo make install
+
+    - name: Build (Windows with MinGW)
+      if: matrix.os == 'windows-latest'
+      run: |
+        # Navigate to the build directory (change this to your actual build directory)
+        cd build_directory
+        make
