@@ -36,12 +36,9 @@ jobs:
 
     - name: Install Dependencies (Windows)
       run: |
-        choco install cmake imagemagick
-        choco install mingw --force
-        choco install cmake.install --installargs '"ADD_CMAKE_TO_PATH=System"'
-        # Additional steps to install libpng and zlib if necessary
+        choco install imagemagick --version=6.8.8.1010 -y
 
     - name: Build (Windows with MinGW)
       run: |
-        cmake .
-        mingw32-make
+        cmake -DCMAKE_BUILD_TYPE=Releas .
+        mingw32-make .
