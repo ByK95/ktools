@@ -24,8 +24,7 @@ COPY . /project
 # Build the project
 RUN cmake -DBUNDLED_DEPENDENCIES=ON -DCMAKE_BUILD_TYPE=Release /project && make
 
-# Expose port 5000
-EXPOSE 5000
+EXPOSE 5555
 
 # Run manage.py when the container launches
 CMD ["python3", "manage.py"]
