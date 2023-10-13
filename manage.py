@@ -37,11 +37,22 @@ def upload_file():
         folder_path = unzip_to_folder(zip_path, UPLOAD_FOLDER)
         folder = os.path.basename(folder_path)
         
-        subprocess.run(["./krane", f"{folder_path}/anim.bin", f"{folder_path}/build.bin", f"./{OUTPUT_FOLDER}/{folder}"])
-        subprocess.run(["./ktech", f"{folder_path}/atlas-0.tex", f"./{OUTPUT_FOLDER}/{folder}"])
+        anim_bin_path = os.path.join(folder_path, 'anim.bin')
+        atlas_tex_path = os.path.join(folder_path, 'atlas-0.tex')
+        
+        if os.path.exists(anim_bin_path):
+            subprocess.run(["./krane", anim_bin_path, f"{folder_path}/build.bin", f"./{OUTPUT_FOLDER}/{folder}"])
+        else:
+            return 'anim.bin file not found.'
+
+        if os.path.exists(atlas_tex_path):
+            subprocess.run(["./ktech", atlas_tex_path, f"./{OUTPUT_FOLDER}/{folder}"])
+        else:
+            return 'atlas-0.tex file not found.'
         
         return 'File uploaded and processed.'
     return 'No file uploaded.'
+
 
 @app.route('/download/<path:filename>', methods=['GET'])
 def download(filename):
