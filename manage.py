@@ -26,13 +26,13 @@ def clean_upload_folder(folder_path, zip_path):
 
 def unzip_to_folder(zip_path, extract_to):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
-        root_names = {name.split('/')[0] for name in zip_ref.namelist()}
+        root_names = {name.split('/')[0] for name in zip_ref.namelist() if name.split('/')[0].endswith('.bin')}
         logging.info(f"Unziping: {zip_path}, root_names: {root_names}, extract to: {extract_to}")
-        if len(root_names) > 1:
-            extract_to = os.path.join(extract_to, list(root_names)[0])
+        if len(root_names) > 0:
+            extract_to = os.path.join(extract_to, os.path.splitext(os.path.basename(zip_path))[0])
         
         zip_ref.extractall(extract_to)
-        if len(root_names) > 1:
+        if len(root_names) > 0:
             return extract_to
         return os.path.join(extract_to, list(root_names)[0])
 
