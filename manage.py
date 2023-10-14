@@ -35,13 +35,16 @@ def upload_file():
         uploaded_file.save(zip_path)
         
         folder_path = unzip_to_folder(zip_path, UPLOAD_FOLDER)
-        folder = os.path.basename(folder_path)
+        folder = os.path.basename(uploaded_file.filename)
         
         anim_bin_path = os.path.join(folder_path, 'anim.bin')
+        build_bin_path = os.path.join(folder_path, 'build.bin')
         atlas_tex_path = os.path.join(folder_path, 'atlas-0.tex')
         
-        if os.path.exists(anim_bin_path):
-            subprocess.run(["./krane", anim_bin_path, f"{folder_path}/build.bin", f"./{OUTPUT_FOLDER}/{folder}"])
+        if os.path.exists(anim_bin_path) and os.path.exists(build_bin_path):
+            subprocess.run(["./krane", anim_bin_path, build_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
+        elif os.path.exists(anim_bin_path):
+            subprocess.run(["./krane", anim_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
         else:
             return 'anim.bin file not found.'
 
@@ -56,7 +59,6 @@ def upload_file():
 
 @app.route('/download/<path:filename>', methods=['GET'])
 def download(filename):
-    # Create a ZIP file
     zipf = zipfile.ZipFile(f"{OUTPUT_FOLDER}/{filename}.zip", 'w', zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(f"{OUTPUT_FOLDER}/{filename}"):
         for file in files:
