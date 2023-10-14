@@ -2,6 +2,7 @@ from flask import Flask, render_template, request, send_from_directory, send_fil
 import os
 import zipfile
 import subprocess
+import shutil
 
 app = Flask(__name__)
 
@@ -13,6 +14,12 @@ if not os.path.exists(UPLOAD_FOLDER):
 
 if not os.path.exists(OUTPUT_FOLDER):
     os.makedirs(OUTPUT_FOLDER)
+
+def clean_upload_folder(folder_path, zip_path):
+    if os.path.exists(folder_path):
+        shutil.rmtree(folder_path)
+    if os.path.exists(zip_path):
+        os.remove(zip_path)
 
 
 def unzip_to_folder(zip_path, extract_to):
@@ -53,13 +60,14 @@ def upload_file():
         else:
             return 'atlas-0.tex file not found.'
         
+        clean_upload_folder(folder_path, zip_path)
         return 'File uploaded and processed.'
     return 'No file uploaded.'
 
 
 @app.route('/download/<path:filename>', methods=['GET'])
 def download(filename):
-    zipf = zipfile.ZipFile(f"{OUTPUT_FOLDER}/{filename}.zip", 'w', zipfile.ZIP_DEFLATED)
+    zipf = zipfile.ZipFile(f"{OUTPUT_FOLDER}/{filename}", 'w', zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(f"{OUTPUT_FOLDER}/{filename}"):
         for file in files:
             zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), f"{OUTPUT_FOLDER}/{filename}"))
