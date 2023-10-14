@@ -67,7 +67,7 @@ def upload_file():
             logging.info(f"Missing {atlas_tex_path}")
             messages.append('atlas-0.tex file not found.')
         
-        clean_upload_folder(folder_path, zip_path)
+        # clean_upload_folder(folder_path, zip_path)
         if messages:
             return messages
         return 'File uploaded and processed.'
