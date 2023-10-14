@@ -51,12 +51,18 @@ def upload_file():
         anim_bin_path = os.path.join(folder_path, 'anim.bin')
         build_bin_path = os.path.join(folder_path, 'build.bin')
         atlas_tex_path = os.path.join(folder_path, 'atlas-0.tex')
+
+        if not os.path.exists(f"./{OUTPUT_FOLDER}/{folder}"):
+            os.makedirs(f"./{OUTPUT_FOLDER}/{folder}")
         
         if os.path.exists(anim_bin_path) and os.path.exists(build_bin_path):
             subprocess.run(["./krane", anim_bin_path, build_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
         elif os.path.exists(anim_bin_path):
             logging.info(f"Missing {build_bin_path}")
             subprocess.run(["./krane", anim_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
+        elif os.path.exists(build_bin_path):
+            logging.info(f"Missing {anim_bin_path}")
+            subprocess.run(["./krane", build_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
         else:
             logging.info(f"Missing {anim_bin_path}, {build_bin_path}")
             messages.append('anim.bin file not found.')
@@ -67,7 +73,7 @@ def upload_file():
             logging.info(f"Missing {atlas_tex_path}")
             messages.append('atlas-0.tex file not found.')
         
-        # clean_upload_folder(folder_path, zip_path)
+        clean_upload_folder(folder_path, zip_path)
         if messages:
             return messages
         return 'File uploaded and processed.'
