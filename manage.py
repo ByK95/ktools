@@ -46,6 +46,7 @@ def upload_file():
         folder_path = unzip_to_folder(zip_path, UPLOAD_FOLDER)
         folder = os.path.basename(uploaded_file.filename.replace('.zip', ''))
         logging.info(f"Folder {folder}")
+        messages = []
         
         anim_bin_path = os.path.join(folder_path, 'anim.bin')
         build_bin_path = os.path.join(folder_path, 'build.bin')
@@ -54,16 +55,21 @@ def upload_file():
         if os.path.exists(anim_bin_path) and os.path.exists(build_bin_path):
             subprocess.run(["./krane", anim_bin_path, build_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
         elif os.path.exists(anim_bin_path):
+            logging.info(f"Missing {build_bin_path}")
             subprocess.run(["./krane", anim_bin_path, f"./{OUTPUT_FOLDER}/{folder}"])
         else:
-            return 'anim.bin file not found.'
+            logging.info(f"Missing {anim_bin_path}, {build_bin_path}")
+            messages.append('anim.bin file not found.')
 
         if os.path.exists(atlas_tex_path):
             subprocess.run(["./ktech", atlas_tex_path, f"./{OUTPUT_FOLDER}/{folder}"])
         else:
-            return 'atlas-0.tex file not found.'
+            logging.info(f"Missing {atlas_tex_path}")
+            messages.append('atlas-0.tex file not found.')
         
         clean_upload_folder(folder_path, zip_path)
+        if messages:
+            return messages
         return 'File uploaded and processed.'
     return 'No file uploaded.'
 
