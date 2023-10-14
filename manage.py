@@ -6,6 +6,7 @@ import shutil
 import logging
 
 app = Flask(__name__)
+app.logger.setLevel(logging.INFO)
 
 UPLOAD_FOLDER = 'uploads'
 OUTPUT_FOLDER = 'outputs'
@@ -26,7 +27,7 @@ def clean_upload_folder(folder_path, zip_path):
 def unzip_to_folder(zip_path, extract_to):
     with zipfile.ZipFile(zip_path, 'r') as zip_ref:
         root_names = {name.split('/')[0] for name in zip_ref.namelist()}
-        logging.info(f"Unziping: {zip_path}, root_names: {root_names}, extract to: {extract_to}")
+        app.logging.info(f"Unziping: {zip_path}, root_names: {root_names}, extract to: {extract_to}")
         if len(root_names) > 1:
             extract_to = os.path.join(extract_to, list(root_names)[0])
         
@@ -44,7 +45,7 @@ def upload_file():
         
         folder_path = unzip_to_folder(zip_path, UPLOAD_FOLDER)
         folder = os.path.basename(uploaded_file.filename)
-        logging.info(f"Folder {folder}")
+        app.logging.info(f"Folder {folder}")
         
         anim_bin_path = os.path.join(folder_path, 'anim.bin')
         build_bin_path = os.path.join(folder_path, 'build.bin')
