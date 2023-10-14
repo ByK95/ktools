@@ -76,7 +76,7 @@ def upload_file():
 
 @app.route('/download/<path:filename>', methods=['GET'])
 def download(filename):
-    zipf = zipfile.ZipFile(f"{OUTPUT_FOLDER}/{filename}", 'w', zipfile.ZIP_DEFLATED)
+    zipf = zipfile.ZipFile(f"{OUTPUT_FOLDER}/{filename}.zip", 'w', zipfile.ZIP_DEFLATED)
     for root, dirs, files in os.walk(f"{OUTPUT_FOLDER}/{filename}"):
         for file in files:
             zipf.write(os.path.join(root, file), os.path.relpath(os.path.join(root, file), f"{OUTPUT_FOLDER}/{filename}"))
