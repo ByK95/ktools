@@ -44,7 +44,7 @@ def upload_file():
         uploaded_file.save(zip_path)
         
         folder_path = unzip_to_folder(zip_path, UPLOAD_FOLDER)
-        folder = os.path.basename(uploaded_file.filename)
+        folder = os.path.basename(uploaded_file.filename.replace('.zip', ''))
         logging.info(f"Folder {folder}")
         
         anim_bin_path = os.path.join(folder_path, 'anim.bin')
